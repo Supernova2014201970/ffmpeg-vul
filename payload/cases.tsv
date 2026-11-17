@@ -1,0 +1,21 @@
+# localId	decoder	sanitizer	alert	expect_frame	poc	patch	fix_commit
+# One row per ARVO case; every case is one PoC run against the single baseline
+# tree (/src/ffmpeg at upstream 17f63d98e679e88a64f96e4aefba57b12ca29a0c).
+# decoder      FFMPEG_DECODER the OSS-Fuzz target name pins (ffmpeg_AV_CODEC_ID_<X>_fuzzer)
+# sanitizer    sanitizer report against, and what reports/*.json carries as "alert"
+# expect_frame ARVO #0 function (informational: the SUMMARY wording varies on replay)
+# poc          PoC bytes, relative to /payload
+# patch        this case's fix patch, relative to /payload; verify-one.sh applies
+#              exactly that one patch on top of the baseline and expects a clean run
+# fix_commit   upstream commit that fixes the case; 11 cases -> 11 unique patches
+42474806	webp	address	Heap-buffer-overflow WRITE 4	intra_predict	pocs/42474806/poc	patches/6b5d3fb26fb4be48e4966e4b1d97c2165538d4ef.patch	6b5d3fb26fb4be48e4966e4b1d97c2165538d4ef
+42474895	libfdk_aac	address	Heap-buffer-overflow WRITE {*}	__asan_memset	pocs/42474895/poc	patches/ca6776a993903dbcfef5ae8a18556c40ecf83e1c.patch	ca6776a993903dbcfef5ae8a18556c40ecf83e1c
+42475161	xpm	address	Stack-buffer-overflow WRITE {*}	strncpy	pocs/42475161/poc	patches/cb243972b121b1ae6b60a78ff55a0506c69f3879.patch	cb243972b121b1ae6b60a78ff55a0506c69f3879
+42475183	mimic	undefined	Index-out-of-bounds	vlc_decode_block	pocs/42475183/poc	patches/d9051f8f3e60768f68867c3e3116e980d855215a.patch	d9051f8f3e60768f68867c3e3116e980d855215a
+42475239	dvbsub	undefined	Index-out-of-bounds	dvbsub_parse_clut_segment	pocs/42475239/poc	patches/8a69f2602fea04b7ebae2db16f2581e8ff5ee0cd.patch	8a69f2602fea04b7ebae2db16f2581e8ff5ee0cd
+42475294	scpr	address	Heap-buffer-overflow WRITE 4	decompress_i	pocs/42475294/poc	patches/7ac5067146613997bb38442cb022d7f41321a706.patch	7ac5067146613997bb38442cb022d7f41321a706
+42475684	h264	undefined	Index-out-of-bounds	decode_residual	pocs/42475684/poc	patches/54e1b62ee28f1588ca35d26eeb2df1fb59040de3.patch	54e1b62ee28f1588ca35d26eeb2df1fb59040de3
+42475961	ac3	undefined	Index-out-of-bounds	ff_eac3_apply_spectral_extension	pocs/42475961/poc	patches/9351a156de724edb69ba6e1f05884fe806a13a21.patch	9351a156de724edb69ba6e1f05884fe806a13a21
+42476317	ac3	undefined	Index-out-of-bounds	decode_audio_block	pocs/42476317/poc	patches/c55e637072b694a1db40e21948d218bfa2e744bb.patch	c55e637072b694a1db40e21948d218bfa2e744bb
+42477083	h264	undefined	Index-out-of-bounds	decode_residual	pocs/42477083/poc	patches/0e87c07d87b474568e82364ae0d4a3928801e2b2.patch	0e87c07d87b474568e82364ae0d4a3928801e2b2
+42483416	hevc	undefined	Index-out-of-bounds	add_candidate_ref	pocs/42483416/poc	patches/1cb4ef526dd1e5f547d0354efb0831d07e967919.patch	1cb4ef526dd1e5f547d0354efb0831d07e967919

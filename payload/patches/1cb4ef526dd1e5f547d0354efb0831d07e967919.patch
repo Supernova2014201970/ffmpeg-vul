@@ -1,0 +1,13 @@
+diff --git a/libavcodec/hevc_refs.c b/libavcodec/hevc_refs.c
+index f9818c958e..68c730edcc 100644
+--- a/libavcodec/hevc_refs.c
++++ b/libavcodec/hevc_refs.c
+@@ -431,7 +431,7 @@ static int add_candidate_ref(HEVCContext *s, RefPicList *list,
+ {
+     HEVCFrame *ref = find_ref_idx(s, poc);
+ 
+-    if (ref == s->ref)
++    if (ref == s->ref || list->nb_refs >= HEVC_MAX_REFS)
+         return AVERROR_INVALIDDATA;
+ 
+     if (!ref) {

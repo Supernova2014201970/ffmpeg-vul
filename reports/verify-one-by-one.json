@@ -1,0 +1,13 @@
+{"pass": 11, "fail": 0, "results": [
+  {"poc": "42474806", "patch": "6b5d3fb26fb4be48e4966e4b1d97c2165538d4ef.patch", "pass": true, "alert": "Heap-buffer-overflow WRITE 4"},
+  {"poc": "42474895", "patch": "ca6776a993903dbcfef5ae8a18556c40ecf83e1c.patch", "pass": true, "alert": "Heap-buffer-overflow WRITE {*}"},
+  {"poc": "42475161", "patch": "cb243972b121b1ae6b60a78ff55a0506c69f3879.patch", "pass": true, "alert": "Stack-buffer-overflow WRITE {*}"},
+  {"poc": "42475183", "patch": "d9051f8f3e60768f68867c3e3116e980d855215a.patch", "pass": true, "alert": "Index-out-of-bounds"},
+  {"poc": "42475239", "patch": "8a69f2602fea04b7ebae2db16f2581e8ff5ee0cd.patch", "pass": true, "alert": "Index-out-of-bounds"},
+  {"poc": "42475294", "patch": "7ac5067146613997bb38442cb022d7f41321a706.patch", "pass": true, "alert": "Heap-buffer-overflow WRITE 4"},
+  {"poc": "42475684", "patch": "54e1b62ee28f1588ca35d26eeb2df1fb59040de3.patch", "pass": true, "alert": "Index-out-of-bounds"},
+  {"poc": "42475961", "patch": "9351a156de724edb69ba6e1f05884fe806a13a21.patch", "pass": true, "alert": "Index-out-of-bounds"},
+  {"poc": "42476317", "patch": "c55e637072b694a1db40e21948d218bfa2e744bb.patch", "pass": true, "alert": "Index-out-of-bounds"},
+  {"poc": "42477083", "patch": "0e87c07d87b474568e82364ae0d4a3928801e2b2.patch", "pass": true, "alert": "Index-out-of-bounds"},
+  {"poc": "42483416", "patch": "1cb4ef526dd1e5f547d0354efb0831d07e967919.patch", "pass": true, "alert": "Index-out-of-bounds"}
+]}

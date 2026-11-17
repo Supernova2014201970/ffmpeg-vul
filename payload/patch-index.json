@@ -1,0 +1,141 @@
+{
+ "6b5d3fb26fb4be48e4966e4b1d97c2165538d4ef": {
+  "cases": [
+   42474806
+  ],
+  "files": [
+   "libavcodec/vp8.c",
+   "libavcodec/webp.c"
+  ],
+  "subject": "avcodec/webp: Always set pix_fmt",
+  "date": "2017-05-10 18:37:49 +0200"
+ },
+ "ca6776a993903dbcfef5ae8a18556c40ecf83e1c": {
+  "cases": [
+   42474895
+  ],
+  "files": [
+   "libavcodec/libfdk-aacdec.c"
+  ],
+  "subject": "avcodec/libfdk-aacdec: Correct buffer_size parameter",
+  "date": "2017-05-25 03:21:50 +0200"
+ },
+ "cb243972b121b1ae6b60a78ff55a0506c69f3879": {
+  "cases": [
+   42475161
+  ],
+  "files": [
+   "libavcodec/xpmdec.c"
+  ],
+  "subject": "avcodec/xpmdec: Fix multiple pointer/memory issues",
+  "date": "2017-05-11 02:38:33 +0200"
+ },
+ "1795dccde0ad22fc8201142f92fb8d58c234f3e4": {
+  "cases": [
+   42475183
+  ],
+  "files": [
+   "libavcodec/mediacodec_wrapper.c"
+  ],
+  "subject": "lavc/mediacodec_wrapper: fix local reference leaks",
+  "date": "2017-05-10 15:59:41 +0200",
+  "shipped": false,
+  "note": "Listed by ARVO as a fix candidate for 42475183 and present in arvo.db's fix_commit column, but it touches the Android MediaCodec wrapper while the crash is in libavcodec/mimic.c; d9051f8f below is the commit that fixes it. Not shipped."
+ },
+ "d9051f8f3e60768f68867c3e3116e980d855215a": {
+  "cases": [
+   42475183
+  ],
+  "files": [
+   "libavcodec/mimic.c"
+  ],
+  "subject": "avcodec/mimic: Fix runtime error: index 96 out of bounds for type 'const int8_t [64]'",
+  "date": "2017-05-11 15:07:28 +0200"
+ },
+ "8a69f2602fea04b7ebae2db16f2581e8ff5ee0cd": {
+  "cases": [
+   42475239
+  ],
+  "files": [
+   "libavcodec/dvbsubdec.c"
+  ],
+  "subject": "avcodec/dvbsubdec: Check entry_id",
+  "date": "2017-05-11 15:18:50 +0200"
+ },
+ "7ac5067146613997bb38442cb022d7f41321a706": {
+  "cases": [
+   42475294
+  ],
+  "files": [
+   "libavcodec/scpr.c"
+  ],
+  "subject": "avcodec/scpr: Check y in first line loop in decompress_i()",
+  "date": "2017-05-11 15:29:31 +0200"
+ },
+ "54e1b62ee28f1588ca35d26eeb2df1fb59040de3": {
+  "cases": [
+   42475684
+  ],
+  "files": [
+   "libavcodec/h264_cavlc.c"
+  ],
+  "subject": "avcodec/h264_cavlc: Fix runtime error: index -1 out of bounds for type 'VLC [15]",
+  "date": "2017-05-13 15:30:28 +0200"
+ },
+ "9351a156de724edb69ba6e1f05884fe806a13a21": {
+  "cases": [
+   42475961
+  ],
+  "files": [
+   "libavcodec/ac3dec.c",
+   "libavcodec/ac3dec.h"
+  ],
+  "subject": "avcodec/ac3dec: Keep track of band structure",
+  "date": "2017-05-13 19:28:01 +0200"
+ },
+ "c55e637072b694a1db40e21948d218bfa2e744bb": {
+  "cases": [
+   42476317
+  ],
+  "files": [
+   "libavcodec/ac3dec.c"
+  ],
+  "subject": "avcodec/ac3dec: Fix: runtime error: index -1 out of bounds for type 'INTFLOAT [2]'",
+  "date": "2017-05-14 14:42:45 +0200"
+ },
+ "0e87c07d87b474568e82364ae0d4a3928801e2b2": {
+  "cases": [
+   42477083
+  ],
+  "files": [
+   "libavcodec/h264_cavlc.c"
+  ],
+  "subject": "avcodec/h264_cavlc: Fix runtime error: index -1 out of bounds for type 'VLC [6]'",
+  "date": "2017-05-17 02:06:49 +0200",
+  "adapted": true,
+  "predecessor": "54e1b62ee28f1588ca35d26eeb2df1fb59040de3",
+  "note": "Case 42477083. Applied on its own, this commit only widens run_vlc[6] to run_vlc[6+1] and leaves the sibling arrays alone, so the PoC still crashes: it takes the chroma_dc branch, (chroma_dc_total_zeros_vlc-1)[total_coeff] with total_coeff == 0. That -1 offset was removed by the earlier fix 54e1b62e, which is also the patch recorded for case 42475684. Upstream therefore needs both commits in sequence; the shipped file is the union of 54e1b62e and 0e87c07d, touching only libavcodec/h264_cavlc.c, so the patched tree is exactly what upstream looks like after 0e87c07d for this file. No other semantics are changed."
+ },
+ "4705edbbb96e193f51c72248f508ae5693702a48": {
+  "cases": [
+   42482171
+  ],
+  "files": [
+   "libavcodec/mjpegdec.c"
+  ],
+  "subject": "avcodec/mjpegdec: Check that reference frame matches the current frame",
+  "date": "2017-06-05 22:23:15 +0200",
+  "shipped": false,
+  "note": "Case 42482171. The PoC does not crash the shipped baseline (17f63d98: exit status 0, no sanitizer report), and ARVO's own recorded crash_output for this case contains no report either. It does crash the prebuilt ffmpeg_AV_CODEC_ID_MXPEG_fuzzer of n132/arvo:42474806-vul (source 3624d45, a SEGV in ff_put_pixels8_mmx), so the PoC is genuine but does not reproduce on this tree. Excluded from payload/; the PoC, the patch and the evidence are kept outside the package, in runs/ffmpeg-baseline/excluded/. Not shipped."
+ },
+ "1cb4ef526dd1e5f547d0354efb0831d07e967919": {
+  "cases": [
+   42483416
+  ],
+  "files": [
+   "libavcodec/hevc_refs.c"
+  ],
+  "subject": "avcodec/hevc_refs: Check nb_refs in add_candidate_ref()",
+  "date": "2017-06-15 01:26:01 +0200"
+ }
+}

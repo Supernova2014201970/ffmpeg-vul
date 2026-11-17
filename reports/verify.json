@@ -1,0 +1,13 @@
+{"pass": 0, "fail": 11, "results": [
+  {"poc": "42474806", "pass": false, "alert": "Heap-buffer-overflow WRITE 4"},
+  {"poc": "42474895", "pass": false, "alert": "Heap-buffer-overflow WRITE {*}"},
+  {"poc": "42475161", "pass": false, "alert": "Stack-buffer-overflow WRITE {*}"},
+  {"poc": "42475183", "pass": false, "alert": "Index-out-of-bounds"},
+  {"poc": "42475239", "pass": false, "alert": "Index-out-of-bounds"},
+  {"poc": "42475294", "pass": false, "alert": "Heap-buffer-overflow WRITE 4"},
+  {"poc": "42475684", "pass": false, "alert": "Index-out-of-bounds"},
+  {"poc": "42475961", "pass": false, "alert": "Index-out-of-bounds"},
+  {"poc": "42476317", "pass": false, "alert": "Index-out-of-bounds"},
+  {"poc": "42477083", "pass": false, "alert": "Index-out-of-bounds"},
+  {"poc": "42483416", "pass": false, "alert": "Index-out-of-bounds"}
+]}
