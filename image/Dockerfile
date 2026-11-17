@@ -17,7 +17,7 @@
 #
 #   /src/ffmpeg   the baseline checkout, detached at 17f63d98, .git intact
 #   /payload      cases.tsv, 11 PoCs, 11 patches, vulnerabilities.json
-#   /opt/ffdt     ffdt, lib.sh, build.sh, verify.sh, verify-one.sh,
+#   /opt/ffdt     lib.sh, build.sh, verify.sh, verify-one.sh,
 #                 verify-one-by-one.sh, hand_repro.c
 #   /out          repro-<fp>-<san>-<decoder>: the 11 baseline reproducers
 #   /work         empty — verify runs build there
@@ -42,7 +42,7 @@ WORKDIR /opt/ffdt
 # pinned to the commit this dataset ships.  The patch loop asserts every
 # payload patch applies to that exact tree.
 RUN set -eux; \
-    chmod +x /opt/ffdt/ffdt /opt/ffdt/*.sh; \
+    chmod +x /opt/ffdt/*.sh; \
     mv /src/fdk-aac /usr/src/fdk-aac; \
     cd /usr/src/fdk-aac; \
     autoreconf -fiv > /tmp/fdk-autoreconf.log 2>&1; \
@@ -79,7 +79,7 @@ ENV SRC=/src/ffmpeg \
 # later in a report.  Writes /reports/verify.json and leaves /out warm; /work is
 # emptied again so `verify-one.sh` still does real builds.
 RUN set -eux; \
-    ffdt verify --report /reports; \
+    verify.sh --report /reports; \
     rm -rf /work/*
 
 # The delivered layout, asserted.

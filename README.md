@@ -34,16 +34,16 @@ ffmpeg-vul/
 docker pull n132/arvo:42474806-vul@sha256:95cd4fadae89976811235d6b70b4d750c42a380845f7df27dc644333fef05052
 docker build -f image/Dockerfile -t ffmpeg-vul:17f63d98 .
 docker run -dit --name ffvul ffmpeg-vul:17f63d98
-docker exec ffvul ffdt build
-docker exec ffvul ffdt verify --report /tmp/report
-docker exec ffvul ffdt verify-one 42474806 --report /tmp/report
-docker exec ffvul ffdt verify-one 42474806 --patched --report /tmp/report
-docker exec ffvul /opt/ffdt/verify-one-by-one.sh --report /tmp/report
+docker exec ffvul build.sh
+docker exec ffvul verify.sh --report /tmp/report
+docker exec ffvul verify-one.sh 42474806 --report /tmp/report
+docker exec ffvul verify-one.sh 42474806 --patched --report /tmp/report
+docker exec ffvul verify-one-by-one.sh --report /tmp/report
 ```
 
-`/opt/ffdt/reports/` 是镜像内自带的随包报告目录，容器的默认工作目录是 `/opt/ffdt`，所以不加 `--report` 时报告会直接覆盖它；要保留随包报告就显式指定目录（如上例的 `/tmp/report`），或挂载一个目录，例如 `-v ${PWD}/reports:/reports` 后写 `/reports`。
+`/opt/ffdt` 在镜像的 `PATH` 里，所以直接按脚本名调用；也可以写全路径 `/opt/ffdt/verify-one.sh`。`/opt/ffdt/reports/` 是镜像内自带的随包报告目录，容器的默认工作目录是 `/opt/ffdt`，所以不加 `--report` 时报告会直接覆盖它；要保留随包报告就显式指定目录（如上例的 `/tmp/report`），或挂载一个目录，例如 `-v ${PWD}/reports:/reports` 后写 `/reports`。
 
-镜像内的工具链来自 2017 年时期的 ARVO / OSS-Fuzz 环境（Ubuntu 16.04、clang 6.0.0 trunk 321529、gcc 5.4、yasm/nasm、libFuzzer 源码）。构建阶段已经跑过一次 `ffdt verify`，所以镜像里 `/out` 直接带有 9 个基线插桩复现程序（覆盖 11 条案例），`/reports/verify.json` 也是构建时写的；随包 `reports/` 存的是同一批脚本在本机重跑的结果。
+镜像内的工具链来自 2017 年时期的 ARVO / OSS-Fuzz 环境（Ubuntu 16.04、clang 6.0.0 trunk 321529、gcc 5.4、yasm/nasm、libFuzzer 源码）。构建阶段已经跑过一次 `verify.sh`，所以镜像里 `/out` 直接带有 9 个基线插桩复现程序（覆盖 11 条案例），`/reports/verify.json` 也是构建时写的；随包 `reports/` 存的是同一批脚本在本机重跑的结果。
 
 ## 3. Dockerfile 做什么
 
@@ -51,13 +51,13 @@ docker exec ffvul /opt/ffdt/verify-one-by-one.sh --report /tmp/report
 2. 复制 `payload/` 到 `/payload`、`scripts/` 到 `/opt/ffdt`、`reports/` 到 `/opt/ffdt/reports`，并给脚本加执行位。
 3. 把基础镜像自带的 `/src/fdk-aac` 编译安装到 `/usr/local`（`--disable-shared --enable-static`；案例 42474895 的修复在 FFmpeg 的封装层，解码器本身不插桩也足够让 ASan 报出越界），随后删掉 `/src` 下除 `ffmpeg` 以外的全部内容，以及 `/out`、`/work` 里的旧产物。
 4. 在 `/src/ffmpeg` 上 `git checkout -f --detach 17f63d98`、`reset --hard`、`clean -xffdq`，断言 `HEAD`、`HEAD^{tree}`、提交时间与 `git status --porcelain`，再对 `payload/patches/*.patch` 逐个 `git apply --check`：11 份补丁必须都能落在这棵树上。
-5. 运行 `ffdt verify --report /reports`：编译 ASan、UBSan 两份基线插桩库和 9 个复现程序（11 条案例，`h264` 与 `ac3` 各两条共用同一解码器 + 检测器的可执行文件），逐个运行 PoC，写 `/reports/verify.json`。基线仍然带 bug，所以这一步要求“每条都崩”，构建期就能发现基线、PoC 或补丁被换掉；随后清空 `/work`，让 `verify-one.sh` 仍做真实构建。
+5. 运行 `verify.sh --report /reports`：编译 ASan、UBSan 两份基线插桩库和 9 个复现程序（11 条案例，`h264` 与 `ac3` 各两条共用同一解码器 + 检测器的可执行文件），逐个运行 PoC，写 `/reports/verify.json`。基线仍然带 bug，所以这一步要求“每条都崩”，构建期就能发现基线、PoC 或补丁被换掉；随后清空 `/work`，让 `verify-one.sh` 仍做真实构建。
 6. 断言交付布局：`/src` 只有 `ffmpeg`、`.git` 存在且在 `17f63d98`、工作区干净、`/payload` 有 11 份补丁/11 个 PoC/11 行案例、`/out` 有 9 个复现程序、`/work` 为空。默认工作目录 `/opt/ffdt`，默认启动 `/bin/bash`。
 
 ```text
 /src/ffmpeg      基线源码与完整 .git（detached 于 17f63d98）
 /payload         案例、PoC、补丁、漏洞信息
-/opt/ffdt        ffdt、lib.sh、build.sh、verify*.sh、hand_repro.c、reports/
+/opt/ffdt        lib.sh、build.sh、verify.sh、verify-one.sh、verify-one-by-one.sh、hand_repro.c、reports/
 /out             repro-<源码指纹>-<sanitizer>-<decoder>
 /work            运行时的源码副本与插桩构建目录，初始为空
 ```
@@ -68,17 +68,18 @@ docker exec ffvul /opt/ffdt/verify-one-by-one.sh --report /tmp/report
 
 | 文件 | 职责与产物 |
 | --- | --- |
-| `ffdt` | 命令分发：`build`、`verify`、`verify-one`，参数原样转给对应脚本 |
+| `lib.sh` | 共用路径、sanitizer 配置、源码指纹、插桩编译 `ensure_libs`/`ensure_repro`、单次执行 `run_poc`；其余脚本都 source 它 |
 | `build.sh` | 普通编译指定目录，生成 `<DIR>/ffmpeg`，不加 sanitizer，不运行 PoC |
-| `lib.sh` | 共用路径、sanitizer 配置、源码指纹、插桩编译 `ensure_libs`/`ensure_repro`、单次执行 `run_poc` |
 | `verify-one.sh` | 查找一个案例，选择原始源码或补丁副本，编译/复用复现程序，运行 PoC，写单案例报告 |
 | `verify.sh` | 遍历案例，调用不带 `--patched` 的 `verify-one.sh`（`--tree` 透传），汇总基线报告 |
 | `verify-one-by-one.sh` | 遍历案例，每次调用 `verify-one.sh --patched`（`--tree` 透传），汇总各自补丁的验证报告 |
 | `hand_repro.c` | C 驱动：读取 PoC，调用 `LLVMFuzzerTestOneInput` 一次，代替 libFuzzer 运行时 |
 
+没有命令分发层：镜像把 `/opt/ffdt` 放进 `PATH`，直接调用脚本名即可（`build.sh`、`verify.sh`、`verify-one.sh`、`verify-one-by-one.sh`）。
+
 ```text
-ffdt build → build.sh → configure + make（普通编译）
-ffdt verify → verify.sh → verify-one.sh --tree DIR
+build.sh → configure + make（普通编译）
+verify.sh → verify-one.sh --tree DIR
 verify-one-by-one.sh → verify-one.sh --patched --tree DIR
 verify-one.sh → lib.sh / ensure_repro → 插桩静态库 + hand_repro.c
               → lib.sh / run_poc → 执行、判定
@@ -87,7 +88,7 @@ verify-one.sh → lib.sh / ensure_repro → 插桩静态库 + hand_repro.c
 ### 4.1 普通编译
 
 ```bash
-ffdt build [DIR]
+build.sh [DIR]
 ```
 
 默认目录 `/src/ffmpeg`。没有 `ffbuild/config.mak` 才运行配置，然后执行 `make -j$(nproc)`。配置参数为 `--cc=clang --cxx=clang++ --ld=clang++ --disable-doc --disable-stripping`，不执行 `make install`。日志为 `/tmp/plain-configure.log` 和 `/tmp/plain-make.log`。
@@ -123,7 +124,6 @@ UBSan 这一档的编译参数是 `-fsanitize=undefined -fno-sanitize=alignment 
 
 ```bash
 verify-one.sh <pocId> [--patched] [--report DIR] [--keep] [--tree DIR]
-ffdt verify-one <pocId> [--patched] [--report DIR] [--keep] [--tree DIR]
 ```
 
 从 `cases.tsv` 读取解码器、sanitizer、PoC 和补丁路径。默认测试 `$TREE`；`--tree DIR` 换成别的源码树，`--patched` 则复制该树到 `/work/one-<ID>`，通过 `git apply --check` 后应用该案例的单个补丁，再编译和测试。脚本不会重置或修改 `--tree`/`$TREE` 指向的目录，因此做基线验证前应保证它内容符合预期。补丁文件始终只有一个、只应用一次：即使某条记录在上游需要两个连续修复才清得掉（第 6 节的 `0e87c07d`），随包文件本身已经包含那两处改动。
@@ -135,7 +135,6 @@ ffdt verify-one <pocId> [--patched] [--report DIR] [--keep] [--tree DIR]
 ```bash
 verify.sh [--report DIR] [--tree DIR]
 verify-one-by-one.sh [--report DIR] [--tree DIR]
-ffdt verify [--report DIR] [--tree DIR]
 ```
 
 前者测试所有基线案例，后者每次从原始源码重新复制、只应用当前案例对应补丁，再运行当前 PoC。补丁不累计，也不对每个补丁运行其他全部 PoC。因此逐补丁报告不能证明“其他漏洞全部仍然存在”或补丁没有回归影响。
@@ -202,7 +201,7 @@ ffdt verify [--report DIR] [--tree DIR]
 
 11 个案例在基线上都产生了 sanitizer 报告：ASan 3 例 `Heap-buffer-overflow WRITE`、1 例 `Stack-buffer-overflow WRITE`；UBSan 7 例 `runtime error: index ... out of bounds`。逐补丁报告里，每个案例应用自己的补丁后都不再产生报告。
 
-`reports/` 只保存 JSON 汇总，不含运行日期、镜像 ID 和实际摘要；需要摘要时重跑 `ffdt verify-one <id>`，它会把命中的 `ERROR: <X>Sanitizer: ...` 行打到终端。
+`reports/` 只保存 JSON 汇总，不含运行日期、镜像 ID 和实际摘要；需要摘要时重跑 `verify-one.sh <id>`，它会把命中的 `ERROR: <X>Sanitizer: ...` 行打到终端。
 
 Windows 上本地源码副本的可执行权限可能与 Linux 有差异，但内容一致：按 MANIFEST 第 3 节的命令，`src/ffmpeg-readonly` 与镜像内 `/src/ffmpeg` 的 6418 个文件聚合 SHA256 都是 `24995eab`。构建和验证都走镜像内的 git 检出，不依赖本地副本。文件清单描述当前磁盘内容。
 

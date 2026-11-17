@@ -84,7 +84,7 @@ baseline_commit() { git -C "$TREE" rev-parse HEAD || die "$TREE is not a git wor
 # Reports carry no error count: callers fold ERROR into pass=false.
 run_poc() {
   local san=$1 bin=$2 poc=$3 out sum rc
-  [ -x "$bin" ] || die "missing reproducer $bin (run: ffdt verify)"
+  [ -x "$bin" ] || die "missing reproducer $bin (run: verify.sh)"
   [ -f "$poc" ] || die "missing PoC $poc"
   local envs; envs=$(san_env "$san")
   out=$(env $envs "$bin" "$poc" 2>&1) 2>/dev/null

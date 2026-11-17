@@ -21,10 +21,9 @@
 | 文件 | 字节 | SHA256 |
 | --- | --- | --- |
 | `MANIFEST.md` | — | 自引用不入表 |
-| `.dockerignore` | 179 | `3078edda0052bdcef280f0c2e665ab30f18e51313711494507717610f5d97b2a` |
-| `README.md` | 24585 | `b7bfaea6177ff9aba0c80f670bfb3e8d7648324ebe4ec41ff962ce273287fdfc` |
+| `README.md` | 24667 | `178c6f489f4a5f772f149ed4389bfe6e35dde5625cbfd754449c4c63f1692aae` |
 | `SPECIFICATION.md` | 9788 | `6a9815099aad6bbc8f7d90e6dd51d4d5f7551c18a682c3f0a07197d3a77d9d38` |
-| `image/Dockerfile` | 4555 | `d907ed1e875bea753dc0a44af2f59fc2c6bab658b66832ba657b8cac3215634f` |
+| `image/Dockerfile` | 4532 | `c6f1a740f57b25bca0022c1b45c8acefdeadd483ac9555757dd6a664f7b2674c` |
 | `payload/cases.tsv` | 2751 | `3175987296c1bd1a4fa0a0860e00d10c6346a6557ae9bb8c377ecc9441846dd1` |
 | `payload/patch-index.json` | 4707 | `a25f69f2b09bcc4c5d0e7cbbe2283f64a20072cefecefe1efd39ef130398aa44` |
 | `payload/vulnerabilities.json` | 19308 | `922ad2bbe23092419acc0b6c1996326f2f256e333e2a7c949cec21819b0cb6ed` |
@@ -54,9 +53,8 @@
 | `reports/verify-one.json` | 107 | `22bea18227d44bf3544697e7ac93667d654629ead71368668725f5004800d963` |
 | `reports/verify.json` | 850 | `25134bb8d7938b7441c4ee19cf901e1f0ed5896c884798aaeb34aeb14f0f4905` |
 | `scripts/build.sh` | 1269 | `9846d482c02f66e4330d9f191227f75802d7a03dae992cfebcd37c094b3bbd28` |
-| `scripts/ffdt` | 1212 | `aacb8278a3f60e323d36d85a572c9b3ed304b1e41756d7b40a1913be002d97bd` |
 | `scripts/hand_repro.c` | 1631 | `5c393318425b172e488de90bc569f151951630bf2b27cc15ec93f3c93b7dffd2` |
-| `scripts/lib.sh` | 8577 | `e37a90395ef8aef226cada464acafdbaf3235e70a41a8cebd82523ce228e48ba` |
+| `scripts/lib.sh` | 8575 | `44ee6d26877e801f5f3fdf56a9ace213706965f3e5a651853f217905c816ccb0` |
 | `scripts/verify-one-by-one.sh` | 2206 | `d0028cbf71be5483eebc1142d2c337e2e250940f4d2c7c409a8b51c52e3f1fc2` |
 | `scripts/verify-one.sh` | 3326 | `4d11bed5f599a0e47ee30954bd4e290b97685b810346dcd7d58c2b150ff498c5` |
 | `scripts/verify.sh` | 2280 | `8f2fda5671b96ed88c8d5d6e1e64bb51de74bec8fec1570cc190b27bc0264527` |
