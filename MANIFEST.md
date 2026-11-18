@@ -1,6 +1,6 @@
 # 交付件清单
 
-核对日期：2026-11-17。此清单依据当前磁盘内容生成。`src/ffmpeg-readonly/` 单独汇总（普通文件，不含 `.git`），其余文件逐项记录字节数与 SHA256；`MANIFEST.md` 自身排除哈希以避免自引用。报告重新生成或其他文件改变后，需要同步更新本清单。
+核对日期：2026-11-18。此清单依据当前磁盘内容生成。`src/ffmpeg-readonly/` 单独汇总（普通文件，不含 `.git`），其余文件逐项记录字节数与 SHA256；`MANIFEST.md` 自身排除哈希以避免自引用。报告重新生成或其他文件改变后，需要同步更新本清单。
 
 ## 1. 当前交付内容
 
@@ -21,12 +21,12 @@
 | 文件 | 字节 | SHA256 |
 | --- | --- | --- |
 | `MANIFEST.md` | — | 自引用不入表 |
-| `README.md` | 24667 | `178c6f489f4a5f772f149ed4389bfe6e35dde5625cbfd754449c4c63f1692aae` |
-| `SPECIFICATION.md` | 9788 | `6a9815099aad6bbc8f7d90e6dd51d4d5f7551c18a682c3f0a07197d3a77d9d38` |
+| `README.md` | 25452 | `24a48851ad0fb444f4c3c785e065e896594af9861c90b5832b2bd8331ef9403c` |
+| `SPECIFICATION.md` | 11847 | `6a0a28f9b546178d6150dbd586736f8b570cac530c977921f7cfe3e874ec1162` |
 | `image/Dockerfile` | 4532 | `c6f1a740f57b25bca0022c1b45c8acefdeadd483ac9555757dd6a664f7b2674c` |
 | `payload/cases.tsv` | 2751 | `3175987296c1bd1a4fa0a0860e00d10c6346a6557ae9bb8c377ecc9441846dd1` |
 | `payload/patch-index.json` | 4707 | `a25f69f2b09bcc4c5d0e7cbbe2283f64a20072cefecefe1efd39ef130398aa44` |
-| `payload/vulnerabilities.json` | 19308 | `922ad2bbe23092419acc0b6c1996326f2f256e333e2a7c949cec21819b0cb6ed` |
+| `payload/vulnerabilities.json` | 27216 | `8cdaf78437e19d1c55b4999a9e72f2cbb53496849e2c1b3035ee1e52cc5db746` |
 | `payload/patches/0e87c07d87b474568e82364ae0d4a3928801e2b2.patch` | 6021 | `7f39cf74adafb40c1ae8cf1107ca8fb098a4828f075c7fad96cb84014cac7cdf` |
 | `payload/patches/1cb4ef526dd1e5f547d0354efb0831d07e967919.patch` | 425 | `18651c16ead28d591cf78b0b893689f31e4aa1177973b18849036b22cecd4282` |
 | `payload/patches/54e1b62ee28f1588ca35d26eeb2df1fb59040de3.patch` | 4205 | `762c74b6f83a165f00dd16a5ea3d3100bf28e44a3dc2655577f06b84f68c89bd` |

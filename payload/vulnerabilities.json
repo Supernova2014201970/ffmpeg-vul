@@ -23,12 +23,51 @@
    "location": {
     "file": "libavcodec/vp8.c",
     "line": 1677,
-    "function": "intra_predict"
+    "function": "intra_predict",
+    "stack": [
+     {
+      "function": "intra_predict",
+      "file": "libavcodec/vp8.c"
+     },
+     {
+      "function": "decode_mb_row_no_filter",
+      "file": "libavcodec/vp8.c"
+     },
+     {
+      "function": "vp8_decode_mb_row_no_filter",
+      "file": "libavcodec/vp8.c"
+     },
+     {
+      "function": "vp78_decode_mb_row_sliced",
+      "file": "libavcodec/vp8.c"
+     },
+     {
+      "function": "vp8_decode_mb_row_sliced",
+      "file": "libavcodec/vp8.c"
+     },
+     {
+      "function": "avcodec_default_execute2",
+      "file": "libavcodec/utils.c"
+     },
+     {
+      "function": "vp78_decode_frame",
+      "file": "libavcodec/vp8.c"
+     },
+     {
+      "function": "ff_vp8_decode_frame",
+      "file": "libavcodec/vp8.c"
+     },
+     {
+      "function": "vp8_lossy_decode_frame",
+      "file": "libavcodec/webp.c"
+     },
+     {
+      "function": "webp_decode_frame",
+      "file": "libavcodec/webp.c"
+     }
+    ]
    },
    "code_snippet": {
-    "file": "libavcodec/webp.c",
-    "function": "vp8_lossy_decode_frame",
-    "line": 1327,
     "before": "    if (!s->initialized) {\n        ff_vp8_decode_init(avctx);\n        s->initialized = 1;\n        if (s->has_alpha)\n            avctx->pix_fmt = AV_PIX_FMT_YUVA420P;\n    }\n    s->lossless = 0;",
     "after": "        ff_vp8_decode_init(avctx);\n        s->initialized = 1;\n    }\n    avctx->pix_fmt = s->has_alpha ? AV_PIX_FMT_YUVA420P : AV_PIX_FMT_YUV420P;\n    s->lossless = 0;\n\n    if (data_size > INT_MAX) {",
     "fix_summary": "vp8_lossy_decode_frame：每一帧都按 has_alpha 重设 pix_fmt，vp78_decode_frame 入口断言格式只能是 YUV420P/YUVA420P（+4/-3 行）"
@@ -46,12 +85,47 @@
    "location": {
     "file": "libavcodec/libfdk-aacdec.c",
     "line": 328,
-    "function": "fdk_aac_decode_frame"
+    "function": "fdk_aac_decode_frame",
+    "stack": [
+     {
+      "function": "fdk_aac_decode_frame",
+      "file": "libavcodec/libfdk-aacdec.c"
+     },
+     {
+      "function": "decode_simple_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_simple_receive_frame",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_receive_frame_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "avcodec_send_packet",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "compat_decode",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "av_malloc",
+      "file": "libavutil/mem.c"
+     },
+     {
+      "function": "fdk_aac_decode_init",
+      "file": "libavcodec/libfdk-aacdec.c"
+     },
+     {
+      "function": "avcodec_open2",
+      "file": "libavcodec/utils.c"
+     }
+    ]
    },
    "code_snippet": {
-    "file": "libavcodec/libfdk-aacdec.c",
-    "function": "fdk_aac_decode_frame",
-    "line": 325,
     "before": "        return AVERROR_INVALIDDATA;\n    }\n\n    err = aacDecoder_DecodeFrame(s->handle, (INT_PCM *) s->decoder_buffer, s->decoder_buffer_size, 0);\n    if (err == AAC_DEC_NOT_ENOUGH_BITS) {\n        ret = avpkt->size - valid;\n        goto end;",
     "after": "        return AVERROR_INVALIDDATA;\n    }\n\n    err = aacDecoder_DecodeFrame(s->handle, (INT_PCM *) s->decoder_buffer, s->decoder_buffer_size / sizeof(INT_PCM), 0);\n    if (err == AAC_DEC_NOT_ENOUGH_BITS) {\n        ret = avpkt->size - valid;\n        goto end;",
     "fix_summary": "fdk_aac_decode_frame：把缓冲大小换成采样个数传给 fdk-aac（+1/-1 行）"
@@ -69,12 +143,43 @@
    "location": {
     "file": "libavcodec/xpmdec.c",
     "line": 266,
-    "function": "color_string_to_rgba"
+    "function": "color_string_to_rgba",
+    "stack": [
+     {
+      "function": "color_string_to_rgba",
+      "file": "libavcodec/xpmdec.c"
+     },
+     {
+      "function": "xpm_decode_frame",
+      "file": "libavcodec/xpmdec.c"
+     },
+     {
+      "function": "decode_simple_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_simple_receive_frame",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_receive_frame_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "avcodec_send_packet",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "compat_decode",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "color_string_to_rgba",
+      "file": "libavcodec/xpmdec.c"
+     }
+    ]
    },
    "code_snippet": {
-    "file": "libavcodec/xpmdec.c",
-    "function": "color_string_to_rgba",
-    "line": 233,
     "before": "    const ColorEntry *entry;\n    char color_name[100];\n\n    if (*p == '#') {\n        p++;",
     "after": "    const ColorEntry *entry;\n    char color_name[100];\n\n    len = FFMIN(FFMAX(len, 0), sizeof(color_name) - 1);\n\n    if (*p == '#') {\n        p++;",
     "fix_summary": "color_string_to_rgba：先夹住颜色串长度；解码器改用带结尾 NUL 的私有缓冲、指针比较改成差值比较（+45/-13 行）"
@@ -92,12 +197,43 @@
    "location": {
     "file": "libavcodec/mimic.c",
     "line": 263,
-    "function": "vlc_decode_block"
+    "function": "vlc_decode_block",
+    "stack": [
+     {
+      "function": "vlc_decode_block",
+      "file": "libavcodec/mimic.c"
+     },
+     {
+      "function": "decode",
+      "file": "libavcodec/mimic.c"
+     },
+     {
+      "function": "mimic_decode_frame",
+      "file": "libavcodec/mimic.c"
+     },
+     {
+      "function": "decode_simple_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_simple_receive_frame",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_receive_frame_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "avcodec_send_packet",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "compat_decode",
+      "file": "libavcodec/decode.c"
+     }
+    ]
    },
    "code_snippet": {
-    "file": "libavcodec/mimic.c",
-    "function": "vlc_decode_block",
-    "line": 260,
     "before": "        /* FFmpeg's IDCT behaves somewhat different from the original code, so\n         * a factor of 4 was added to the input */\n\n        coeff = vlcdec_lookup[num_bits][value];\n        if (pos < 3)\n            coeff *= 16;\n        else /* TODO Use >> 10 instead of / 1001 */",
     "after": "        /* FFmpeg's IDCT behaves somewhat different from the original code, so\n         * a factor of 4 was added to the input */\n\n        coeff = ((int8_t*)vlcdec_lookup[num_bits])[value];\n        if (pos < 3)\n            coeff *= 16;\n        else /* TODO Use >> 10 instead of / 1001 */",
     "fix_summary": "vlc_decode_block：二维下标改成对行首指针的扁平索引（+1/-1 行）"
@@ -115,12 +251,23 @@
    "location": {
     "file": "libavcodec/dvbsubdec.c",
     "line": 1107,
-    "function": "dvbsub_parse_clut_segment"
+    "function": "dvbsub_parse_clut_segment",
+    "stack": [
+     {
+      "function": "dvbsub_parse_clut_segment",
+      "file": "libavcodec/dvbsubdec.c"
+     },
+     {
+      "function": "dvbsub_decode",
+      "file": "libavcodec/dvbsubdec.c"
+     },
+     {
+      "function": "avcodec_decode_subtitle2",
+      "file": "libavcodec/decode.c"
+     }
+    ]
    },
    "code_snippet": {
-    "file": "libavcodec/dvbsubdec.c",
-    "function": "dvbsub_parse_clut_segment",
-    "line": 1103,
     "before": "                return AVERROR_INVALIDDATA;\n        }\n\n        if (depth & 0x80)\n            clut->clut4[entry_id] = RGBA(r,g,b,255 - alpha);\n        else if (depth & 0x40)\n            clut->clut16[entry_id] = RGBA(r,g,b,255 - alpha);",
     "after": "                return AVERROR_INVALIDDATA;\n        }\n\n        if (depth & 0x80 && entry_id < 4)\n            clut->clut4[entry_id] = RGBA(r,g,b,255 - alpha);\n        else if (depth & 0x40 && entry_id < 16)\n            clut->clut16[entry_id] = RGBA(r,g,b,255 - alpha);",
     "fix_summary": "dvbsub_parse_clut_segment：按 4 色/16 色表的大小校验 entry_id（+2/-2 行）"
@@ -138,12 +285,51 @@
    "location": {
     "file": "libavcodec/scpr.c",
     "line": 334,
-    "function": "decompress_i"
+    "function": "decompress_i",
+    "stack": [
+     {
+      "function": "decompress_i",
+      "file": "libavcodec/scpr.c"
+     },
+     {
+      "function": "decode_frame",
+      "file": "libavcodec/scpr.c"
+     },
+     {
+      "function": "decode_simple_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_simple_receive_frame",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_receive_frame_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "avcodec_send_packet",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "compat_decode",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "av_malloc",
+      "file": "libavutil/mem.c"
+     },
+     {
+      "function": "av_buffer_alloc",
+      "file": "libavutil/buffer.c"
+     },
+     {
+      "function": "av_buffer_allocz",
+      "file": "libavutil/buffer.c"
+     }
+    ]
    },
    "code_snippet": {
-    "file": "libavcodec/scpr.c",
-    "function": "decompress_i",
-    "line": 331,
     "before": "        clr = (b << 16) + (g << 8) + r;\n        k += run;\n        while (run-- > 0) {\n            dst[y * linesize + x] = clr;\n            lx = x;\n            ly = y;",
     "after": "        clr = (b << 16) + (g << 8) + r;\n        k += run;\n        while (run-- > 0) {\n            if (y >= avctx->height)\n                return AVERROR_INVALIDDATA;\n\n            dst[y * linesize + x] = clr;",
     "fix_summary": "decompress_i：写像素前检查 y 是否已越过画面高度（+3/-0 行）"
@@ -161,12 +347,51 @@
    "location": {
     "file": "libavcodec/h264_cavlc.c",
     "line": 579,
-    "function": "decode_residual"
+    "function": "decode_residual",
+    "stack": [
+     {
+      "function": "decode_residual",
+      "file": "libavcodec/h264_cavlc.c"
+     },
+     {
+      "function": "decode_luma_residual",
+      "file": "libavcodec/h264_cavlc.c"
+     },
+     {
+      "function": "ff_h264_decode_mb_cavlc",
+      "file": "libavcodec/h264_cavlc.c"
+     },
+     {
+      "function": "decode_slice",
+      "file": "libavcodec/h264_slice.c"
+     },
+     {
+      "function": "ff_h264_execute_decode_slices",
+      "file": "libavcodec/h264_slice.c"
+     },
+     {
+      "function": "decode_nal_units",
+      "file": "libavcodec/h264dec.c"
+     },
+     {
+      "function": "h264_decode_frame",
+      "file": "libavcodec/h264dec.c"
+     },
+     {
+      "function": "decode_simple_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_simple_receive_frame",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_receive_frame_internal",
+      "file": "libavcodec/decode.c"
+     }
+    ]
    },
    "code_snippet": {
-    "file": "libavcodec/h264_cavlc.c",
-    "function": "decode_residual",
-    "line": 570,
     "before": "    else{\n        if (max_coeff <= 8) {\n            if (max_coeff == 4)\n                zeros_left = get_vlc2(gb, (chroma_dc_total_zeros_vlc-1)[total_coeff].table,\n                                      CHROMA_DC_TOTAL_ZEROS_VLC_BITS, 1);\n            else\n                zeros_left = get_vlc2(gb, (chroma422_dc_total_zeros_vlc-1)[total_coeff].table,",
     "after": "    else{\n        if (max_coeff <= 8) {\n            if (max_coeff == 4)\n                zeros_left = get_vlc2(gb, chroma_dc_total_zeros_vlc[total_coeff].table,\n                                      CHROMA_DC_TOTAL_ZEROS_VLC_BITS, 1);\n            else\n                zeros_left = get_vlc2(gb, chroma422_dc_total_zeros_vlc[total_coeff].table,",
     "fix_summary": "decode_residual：三张 total_zeros 表各多留一项、初始化从 [i+1] 起写，取值改用 [total_coeff]（+14/-14 行）"
@@ -184,12 +409,43 @@
    "location": {
     "file": "libavcodec/eac3dec.c",
     "line": 114,
-    "function": "ff_eac3_apply_spectral_extension"
+    "function": "ff_eac3_apply_spectral_extension",
+    "stack": [
+     {
+      "function": "ff_eac3_apply_spectral_extension",
+      "file": "libavcodec/eac3dec.c"
+     },
+     {
+      "function": "decode_audio_block",
+      "file": "libavcodec/ac3dec.c"
+     },
+     {
+      "function": "ac3_decode_frame",
+      "file": "libavcodec/ac3dec.c"
+     },
+     {
+      "function": "decode_simple_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_simple_receive_frame",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_receive_frame_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "avcodec_send_packet",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "compat_decode",
+      "file": "libavcodec/decode.c"
+     }
+    ]
    },
    "code_snippet": {
-    "file": "libavcodec/ac3dec.c",
-    "function": "decode_band_structure",
-    "line": 780,
     "before": "            coded_band_struct[subbnd] = get_bits1(gbc);\n        }\n        band_struct = coded_band_struct;\n    } else if (!blk) {\n        band_struct = &default_band_struct[start_subband+1];\n    } else {\n        /* no change in band structure */",
     "after": "    n_subbands = end_subband - start_subband;\n\n    if (!blk)\n        memcpy(band_struct, default_band_struct, band_struct_size);\n\n    av_assert0(band_struct_size >= start_subband + n_subbands);\n",
     "fix_summary": "decode_band_structure：把频带结构存进解码上下文、跨块保持，并在入口断言结构表容量（+36/-28 行）"
@@ -207,12 +463,39 @@
    "location": {
     "file": "libavcodec/ac3dec.c",
     "line": 1394,
-    "function": "decode_audio_block"
+    "function": "decode_audio_block",
+    "stack": [
+     {
+      "function": "decode_audio_block",
+      "file": "libavcodec/ac3dec.c"
+     },
+     {
+      "function": "ac3_decode_frame",
+      "file": "libavcodec/ac3dec.c"
+     },
+     {
+      "function": "decode_simple_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_simple_receive_frame",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_receive_frame_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "avcodec_send_packet",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "compat_decode",
+      "file": "libavcodec/decode.c"
+     }
+    ]
    },
    "code_snippet": {
-    "file": "libavcodec/ac3dec.c",
-    "function": "decode_audio_block",
-    "line": 1387,
     "before": "        int audio_channel = 0;\n        INTFLOAT gain;\n        if (s->channel_mode == AC3_CHMODE_DUALMONO)\n            audio_channel = 2-ch;\n        if (s->heavy_compression && s->compression_exists[audio_channel])\n            gain = s->heavy_dynamic_range[audio_channel];",
     "after": "        int audio_channel = 0;\n        INTFLOAT gain;\n        if (s->channel_mode == AC3_CHMODE_DUALMONO && ch <= 2)\n            audio_channel = 2-ch;\n        if (s->heavy_compression && s->compression_exists[audio_channel])\n            gain = s->heavy_dynamic_range[audio_channel];",
     "fix_summary": "decode_audio_block：只在 ch <= 2 时按 dual mono 折算声道号（+1/-1 行）"
@@ -230,12 +513,51 @@
    "location": {
     "file": "libavcodec/h264_cavlc.c",
     "line": 579,
-    "function": "decode_residual"
+    "function": "decode_residual",
+    "stack": [
+     {
+      "function": "decode_residual",
+      "file": "libavcodec/h264_cavlc.c"
+     },
+     {
+      "function": "decode_luma_residual",
+      "file": "libavcodec/h264_cavlc.c"
+     },
+     {
+      "function": "ff_h264_decode_mb_cavlc",
+      "file": "libavcodec/h264_cavlc.c"
+     },
+     {
+      "function": "decode_slice",
+      "file": "libavcodec/h264_slice.c"
+     },
+     {
+      "function": "ff_h264_execute_decode_slices",
+      "file": "libavcodec/h264_slice.c"
+     },
+     {
+      "function": "decode_nal_units",
+      "file": "libavcodec/h264dec.c"
+     },
+     {
+      "function": "h264_decode_frame",
+      "file": "libavcodec/h264dec.c"
+     },
+     {
+      "function": "decode_simple_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_simple_receive_frame",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_receive_frame_internal",
+      "file": "libavcodec/decode.c"
+     }
+    ]
    },
    "code_snippet": {
-    "file": "libavcodec/h264_cavlc.c",
-    "function": "decode_residual",
-    "line": 586,
     "before": "        ((type*)block)[*scantable] = level[0]; \\\n        for(i=1;i<total_coeff && zeros_left > 0;i++) { \\\n            if(zeros_left < 7) \\\n                run_before= get_vlc2(gb, (run_vlc-1)[zeros_left].table, RUN_VLC_BITS, 1); \\\n            else \\\n                run_before= get_vlc2(gb, run7_vlc.table, RUN7_VLC_BITS, 2); \\\n            zeros_left -= run_before; \\",
     "after": "        ((type*)block)[*scantable] = level[0]; \\\n        for(i=1;i<total_coeff && zeros_left > 0;i++) { \\\n            if(zeros_left < 7) \\\n                run_before= get_vlc2(gb, run_vlc[zeros_left].table, RUN_VLC_BITS, 1); \\\n            else \\\n                run_before= get_vlc2(gb, run7_vlc.table, RUN7_VLC_BITS, 2); \\\n            zeros_left -= run_before; \\",
     "fix_summary": "decode_residual：run_vlc 多留一项、初始化从 [i+1] 起写，取值改用 [zeros_left]（+5/-5 行）"
@@ -253,12 +575,51 @@
    "location": {
     "file": "libavcodec/hevc_refs.c",
     "line": 451,
-    "function": "add_candidate_ref"
+    "function": "add_candidate_ref",
+    "stack": [
+     {
+      "function": "add_candidate_ref",
+      "file": "libavcodec/hevc_refs.c"
+     },
+     {
+      "function": "ff_hevc_frame_rps",
+      "file": "libavcodec/hevc_refs.c"
+     },
+     {
+      "function": "hevc_frame_start",
+      "file": "libavcodec/hevcdec.c"
+     },
+     {
+      "function": "decode_nal_unit",
+      "file": "libavcodec/hevcdec.c"
+     },
+     {
+      "function": "decode_nal_units",
+      "file": "libavcodec/hevcdec.c"
+     },
+     {
+      "function": "hevc_decode_frame",
+      "file": "libavcodec/hevcdec.c"
+     },
+     {
+      "function": "decode_simple_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_simple_receive_frame",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "decode_receive_frame_internal",
+      "file": "libavcodec/decode.c"
+     },
+     {
+      "function": "avcodec_send_packet",
+      "file": "libavcodec/decode.c"
+     }
+    ]
    },
    "code_snippet": {
-    "file": "libavcodec/hevc_refs.c",
-    "function": "add_candidate_ref",
-    "line": 439,
     "before": "{\n    HEVCFrame *ref = find_ref_idx(s, poc);\n\n    if (ref == s->ref)\n        return AVERROR_INVALIDDATA;\n\n    if (!ref) {",
     "after": "{\n    HEVCFrame *ref = find_ref_idx(s, poc);\n\n    if (ref == s->ref || list->nb_refs >= HEVC_MAX_REFS)\n        return AVERROR_INVALIDDATA;\n\n    if (!ref) {",
     "fix_summary": "add_candidate_ref：参考帧数量达到 HEVC_MAX_REFS 就返回错误（+1/-1 行）"

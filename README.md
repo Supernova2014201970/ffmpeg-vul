@@ -180,7 +180,9 @@ verify-one-by-one.sh [--report DIR] [--tree DIR]
 
 `cases.tsv` 的列为 `localId decoder sanitizer alert expect_frame poc patch fix_commit`，11 个案例对应 11 个唯一补丁（一对一）。补丁按 fix commit 命名，内容可能经过适配（例如 ARVO 对 `d9051f8f` 的选取与 `arvo.db` 的 `fix_commit` 不同、`0e87c07d` 叠加了它前一个修复，见下），因此上游 `git show` 不能代替随包补丁文件。`cases.tsv` 与 `hand_repro.c` 是本包针对 FFmpeg 的实现，不属于通用规约要求。
 
-`vulnerabilities.json` 包含 project、repo、baseline（`commit`/`describe`/`date`/`note`）、paths 和 vulnerabilities；各漏洞提供 id、type、location、code_snippet、description 和 patch 路径。`code_snippet.before` 取自 `src/ffmpeg-readonly` 中的基线文件、`code_snippet.after` 取自把该补丁应用到临时副本后的同一文件，生成时逐条校验（`make_vulns.py`，不随包）；`location.line` 与 `code_snippet.line` 都是基线中的行号。
+`vulnerabilities.json` 包含 project、repo、baseline（`commit`/`describe`/`date`/`note`）、paths 和 vulnerabilities；各漏洞提供 id、type、location、code_snippet、description 和 patch 路径。`code_snippet.before` 取自 `src/ffmpeg-readonly` 中的基线文件、`code_snippet.after` 取自把该补丁应用到临时副本后的同一文件，生成时逐条校验（`make_vulns.py`，不随包）；`code_snippet` 只含 `before`/`after`/`fix_summary`，不带文件、函数和行号，片段位置就是 `patch` 里对应 hunk 的位置。`location.line` 是基线中的崩溃报告行号（sanitizer 栈顶）；修复点与报告位置不一定同处，例如 42474806 报在 `libavcodec/vp8.c` 的 `intra_predict`、片段取自 `libavcodec/webp.c` 的 `vp8_lossy_decode_frame`，这类差异写在 `description` 里。
+
+`location.stack` 是报告里的调用链，从第一个业务帧开始（去掉 `LLVMFuzzerTestOneInput`、`subtitle_handler` 等 `tools/target_dec_fuzzer.c` 里的驱动帧），由内向外、最多 10 帧（本包 3–10 帧；每帧只记函数和文件，不记行号）。42474806 的栈从 `intra_predict` 一路走到 `vp8_lossy_decode_frame`（`libavcodec/webp.c`），「报在 vp8、修在 webp」在数据里直接可见。11 条案例唯一的共享位置 `libavcodec/h264_cavlc.c:579`（42475684/42477083）两条栈完全相同——都是同一条 `decode_residual` 调用链，到函数粒度就分不开——只能靠 `patch` 区分：42477083 的补丁把 42475684 那处修复并了进来（见下）。
 
 `patch-index.json` 记录每个补丁的上游标题、日期、改动文件和对应案例，并标出两份**未随包**的提交：
 
